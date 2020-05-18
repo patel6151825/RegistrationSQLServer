@@ -9,6 +9,7 @@ namespace RegistrationSQLServer
 {
     public partial class Registration : System.Web.UI.Page
     {
+        private int res;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -29,11 +30,43 @@ namespace RegistrationSQLServer
                 userInfo.PostalCode = Server.HtmlEncode(zipCodeTextBox.Text);
                 userInfo.Country = Server.HtmlEncode(countryTextBox.Text);
 
-                if (DBLayer.DBUtilities.InsertUserInformation(userInfo) == 1)
+                res = DBLayer.DBUtilities.InsertUserInformation(userInfo);
+                //store the returned new id into session object
+                Session["id"] = res;
+                if ( res!=-1)
+                {
                     this.lblResultMessage.Text = "The User Information was successfully inserted into database table";
+                    this.editInfoButton.Visible = true;
+                }
                 else
+                {
                     this.lblResultMessage.Text = "There was an error while inserting the user information!";
+                }
+                    
             }
+        }
+
+        protected void editInfoButton_Click(object sender, EventArgs e)
+        {
+            int uid = Convert.ToInt32(Session["id"]);
+            Response.Redirect($"EditUserInformationById.aspx?id={uid}");
+        }
+
+        protected void btnReset_Click(object sender, EventArgs e)
+        {
+            //method to clear all textboxes
+            resetTextBoxes();
+        }
+
+        private void resetTextBoxes()
+        {
+            firstNameTextBox.Text = "";
+            lastNameTextBox.Text = "";
+            addressTextBox.Text = "";
+            cityTextBox.Text = "";
+            stateOrProvinceTextBox.Text = "";
+            zipCodeTextBox.Text = "";
+            countryTextBox.Text = "";
         }
     }
 }
