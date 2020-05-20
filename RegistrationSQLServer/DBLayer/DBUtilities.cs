@@ -106,5 +106,26 @@ namespace RegistrationSQLServer.DBLayer
             return result;
         }
 
+        //To Delete user Information depends on Id given
+        public static int DeleteUserInformationById(int userId)
+        {
+            int result;
+
+            using (SqlConnection cnn = GetSqlConnection())
+            {
+                String sql = $"Delete from UserInformation Where Id = {userId}";
+
+                using (SqlCommand command = new SqlCommand(sql, cnn))
+                {
+                    cnn.Open();
+
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.CommandText = sql;
+                    result = command.ExecuteNonQuery();
+                }
+            }
+
+            return result;
+        }
     }
 }

@@ -11,8 +11,17 @@ namespace RegistrationSQLServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Get Id which is passed with request
-            int uId = Int32.Parse(Request.QueryString["id"]);
+            int uId=0;
+            //check for null
+            if (!string.IsNullOrEmpty(Request.QueryString["id"]))
+            {
+                //Get Id which is passed with request
+                uId = Int32.Parse(Request.QueryString["id"]);
+            }
+            else
+            {
+                Response.Write("Id to update user is not provided");
+            }
             BusinessLayer.UserInformation userInfo = DBLayer.DBUtilities.SelectUserInformationById(uId);
 
             //If not POST then save edited data into iserinfo object
